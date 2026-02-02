@@ -9,6 +9,7 @@ import f from "./assets/f.png"
 import p from "./assets/p.png"
 import d from "./assets/d.png"
 import a from "./assets/a.png"
+import c from "./assets/c.png"
 import Nazeeh_Nahaban from "./assets/Nazeeh_Nahaban.pdf"
 
 const FloatingIcons = () => {
@@ -311,7 +312,7 @@ const Portfolio = () => {
       description: 'Complete e-commerce and service platform for aquatic solutions and landscaping company based in Kerala, India.',
       tech: ['Next.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS S3', 'Cloudinary'],
       link: 'https://www.thefoscape.com/',
-      image: p,
+      image: c,
       location: 'Kerala, India',
       type: 'E-commerce & Services',
       features: ['Service Booking', 'E-commerce', 'Team Management', 'Product Catalog'],
