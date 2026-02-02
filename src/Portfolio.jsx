@@ -837,7 +837,7 @@ const Portfolio = () => {
               >
                 <div className="w-8 h-8 mx-auto mb-4 text-purple-600 dark:text-purple-400 text-2xl">📱</div>
                 <h3 className="font-bold mb-2">WhatsApp</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">+971 50 788 9313</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">+91 9207904611</p>
               </a>
             </ScrollReveal>
             
@@ -847,8 +847,8 @@ const Portfolio = () => {
                 className="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 block"
               >
                 <Phone className="w-8 h-8 mx-auto mb-4 text-purple-600 dark:text-purple-400" />
-                <h3 className="font-bold mb-2">Phone (India)</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">+91 92079 04611</p>
+                <h3 className="font-bold mb-2">Phone </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">+971 50 788 9313</p>
               </a>
             </ScrollReveal>
             
