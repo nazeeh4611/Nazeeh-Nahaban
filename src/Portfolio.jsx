@@ -479,68 +479,76 @@ const Portfolio = () => {
       </div>
 
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <button onClick={() => scrollToSection('home')} className="text-2xl font-bold tracking-tighter">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">NN</span>
-            </button>
-            
-            <div className="hidden md:flex items-center gap-8">
-              {['Home', 'Projects', 'About', 'Experience', 'Contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className={`text-sm font-medium transition-all duration-300 hover:text-purple-600 dark:hover:text-purple-400 ${
-                    activeSection === item.toLowerCase()
-                      ? 'text-purple-600 dark:text-purple-400'
-                      : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-              <button
-                onClick={downloadCV}
-                className="px-6 py-2.5 rounded-full border border-purple-600 dark:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-500/10 transition-all duration-300 text-sm font-medium flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Download CV
-              </button>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white transition-all duration-300 text-sm font-medium"
-              >
-                Book a Call
-              </button>
-            </div>
+  <div className="max-w-7xl mx-auto px-6 py-4">
+    <div className="flex items-center justify-between">
+      {/* Logo/Brand - Left aligned */}
+      <button onClick={() => scrollToSection('home')} className="text-2xl font-bold tracking-tighter">
+        NN
+      </button>
+      
+      {/* Navigation Links - Centered */}
+      <div className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
+        {['Home', 'Projects', 'About', 'Experience', 'Contact'].map((item) => (
+          <button
+            key={item}
+            onClick={() => scrollToSection(item.toLowerCase())}
+            className={`text-sm font-medium transition-all duration-300 hover:text-purple-600 dark:hover:text-purple-400 ${
+              activeSection === item.toLowerCase()
+                ? 'text-purple-600 dark:text-purple-400'
+                : 'text-gray-600 dark:text-gray-400'
+            }`}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+      
+      {/* Action Buttons - Right aligned */}
+      <div className="hidden md:flex items-center gap-4">
+        <button
+          onClick={downloadCV}
+          className="px-6 py-2.5 rounded-full border border-purple-600 dark:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-500/10 transition-all duration-300 text-sm font-medium flex items-center gap-2"
+        >
+          <Download className="w-4 h-4" />
+          Download CV
+        </button>
+        <button
+          onClick={() => scrollToSection('contact')}
+          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white transition-all duration-300 text-sm font-medium"
+        >
+          Book a Call
+        </button>
+      </div>
 
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden">
-              {isMenuOpen ? <X /> : <Menu />}
-            </button>
-          </div>
+      {/* Mobile menu button */}
+      <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden">
+        {isMenuOpen ? <X /> : <Menu />}
+      </button>
+    </div>
 
-          {isMenuOpen && (
-            <div className="md:hidden mt-6 flex flex-col gap-4 pb-4 animate-in slide-in-from-top">
-              {['Home', 'Projects', 'About', 'Experience', 'Contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className="text-left text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors py-2"
-                >
-                  {item}
-                </button>
-              ))}
-              <button
-                onClick={downloadCV}
-                className="text-left text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors py-2 flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Download CV
-              </button>
-            </div>
-          )}
-        </div>
-      </nav>
+    {/* Mobile menu */}
+    {isMenuOpen && (
+      <div className="md:hidden mt-6 flex flex-col gap-4 pb-4 animate-in slide-in-from-top">
+        {['Home', 'Projects', 'About', 'Experience', 'Contact'].map((item) => (
+          <button
+            key={item}
+            onClick={() => scrollToSection(item.toLowerCase())}
+            className="text-left text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors py-2"
+          >
+            {item}
+          </button>
+        ))}
+        <button
+          onClick={downloadCV}
+          className="text-left text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors py-2 flex items-center gap-2"
+        >
+          <Download className="w-4 h-4" />
+          Download CV
+        </button>
+      </div>
+    )}
+  </div>
+</nav>
 
       <section id="home" className="relative min-h-screen flex items-center justify-center px-6 pt-24">
         <div className="absolute top-24 right-8 md:right-24 flex items-center gap-2 text-purple-600 dark:text-purple-400 text-xs md:text-sm font-medium animate-pulse">
