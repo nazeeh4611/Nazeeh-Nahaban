@@ -553,14 +553,13 @@ const Portfolio = () => {
       <section id="home" className="relative min-h-screen flex items-center justify-center px-6 pt-24">
         <div className="absolute top-24 right-8 md:right-24 flex items-center gap-2 text-purple-600 dark:text-purple-400 text-xs md:text-sm font-medium animate-pulse">
           <span className="w-2 h-2 bg-purple-600 dark:bg-purple-400 rounded-full"></span>
-          <span className="uppercase tracking-wider">Based in Dubai • Available Worldwide</span>
-          <ArrowRight className="w-4 h-4" />
+          <span className="uppercase tracking-wider break-words">
+  Based in Dubai • Available Worldwide
+</span>          <ArrowRight className="w-4 h-4" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-8">
-            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">Full Stack Developer</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
