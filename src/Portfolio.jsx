@@ -284,7 +284,7 @@ const Portfolio = () => {
     {
       title: 'Wavescation',
       description: 'Dubai-based staycation booking platform with AFS payment gateway integration and complete management system for both users and admins.',
-      tech: ['Next.js', 'Node.js', 'MongoDB', 'AFS Payment', 'Docker', 'Google Cloud Run'],
+      tech: ['React.js', 'Node.js', 'MongoDB', 'AFS Payment', 'Docker', 'Google Cloud Run'],
       link: 'https://www.wavescation.com/',
       image: v,
       location: 'Dubai, UAE',
@@ -297,7 +297,7 @@ const Portfolio = () => {
     {
       title: 'Simpolo Trading',
       description: 'Tiles and sanitary trading company platform with complete admin management, product listing, and inquiry setup for Dubai and Sharjah markets.',
-      tech: ['Next.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS', 'Docker'],
+      tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS', 'Docker'],
       link: 'https://simpolotrading.com/',
       image: s,
       location: 'Dubai & Sharjah, UAE',
@@ -310,7 +310,7 @@ const Portfolio = () => {
     {
       title: 'Foscape Aquatic Care',
       description: 'Complete e-commerce and service platform for aquatic solutions and landscaping company based in Kerala, India.',
-      tech: ['Next.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS S3', 'Cloudinary'],
+      tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS S3', 'Cloudinary'],
       link: 'https://www.thefoscape.com/',
       image: c,
       location: 'Kerala, India',
@@ -336,7 +336,7 @@ const Portfolio = () => {
     {
       title: 'Arren Medical Clinic',
       description: 'Complete clinic management solution for a company based in Saudi Arabia with patient management and appointment system.',
-      tech: ['Next.js', 'Node.js', 'MongoDB', 'Tailwind', 'AWS'],
+      tech: ['React.js', 'Node.js', 'MongoDB', 'Tailwind', 'AWS'],
       link: 'https://arren-ksa-frontend.vercel.app/',
       image: a,
       location: 'Saudi Arabia',
@@ -362,7 +362,7 @@ const Portfolio = () => {
     {
       title: 'Flybuybrand',
       description: 'Multi-vendor e-commerce platform for clothing, accessories, and home appliances based in Kerala, India and Dubai.',
-      tech: ['Next.js', 'Node.js', 'MongoDB Atlas', 'WhatsApp API', 'Razorpay', 'AWS'],
+      tech: ['React.js', 'Node.js', 'MongoDB Atlas', 'WhatsApp API', 'Razorpay', 'AWS'],
       link: 'https://flybuybrand.com/',
       image: f,
       location: 'Kerala & Dubai',
