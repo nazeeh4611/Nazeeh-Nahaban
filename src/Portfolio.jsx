@@ -35,6 +35,32 @@ const Portfolio = () => {
       category: 'ecommerce'
     },
     {
+      title: 'Eventra',
+      description: 'Dubai-based platform for booking events, parties, and hosting social gatherings with complete event management system and ticketing.',
+      tech: ['MERN Stack', 'Stripe Payments', 'AWS S3', 'Redis', 'Docker'],
+      link: 'https://www.eventra.club/',
+      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800',
+      location: 'Dubai, UAE',
+      type: 'Event Booking Platform',
+      features: ['Event Booking System', 'Party Hosting', 'Ticketing', 'Real-time Updates', 'Social Features'],
+      year: '2024',
+      role: 'Full Stack Developer',
+      category: 'platform'
+    },
+    {
+      title: 'Dubai Communities',
+      description: 'Mobile application for connecting communities in Dubai, enabling users to host meetups, join existing communities, and participate in local events.',
+      tech: ['React Native', 'Node.js', 'MongoDB', 'Express.js', 'Firebase', 'Socket.io'],
+      link: '#',
+      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800',
+      location: 'Dubai, UAE',
+      type: 'Community Mobile App',
+      features: ['Community Creation', 'Meetup Hosting', 'Event Discovery', 'Real-time Chat', 'Push Notifications'],
+      year: '2024',
+      role: 'Full Stack Developer',
+      category: 'mobile'
+    },
+    {
       title: 'Simpolo Trading',
       description: 'Tiles and sanitary trading company platform with complete admin management, product listing, and inquiry setup for Dubai and Sharjah markets.',
       tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS', 'Docker'],
@@ -473,7 +499,7 @@ const Portfolio = () => {
                 <span>All Projects</span>
                 <span className="text-xs opacity-70">({projects.length})</span>
               </button>
-              {['ecommerce', 'services', 'healthcare', 'platform'].map((category) => (
+              {['ecommerce', 'services', 'healthcare', 'platform', 'mobile'].map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveFilter(category)}
@@ -509,6 +535,13 @@ const Portfolio = () => {
                         {currentProject.type}
                       </span>
                     </div>
+                    {currentProject.link === '#' && (
+                      <div className="absolute bottom-4 right-4">
+                        <span className="px-3 py-1.5 rounded-full bg-amber-500 text-white text-sm font-medium">
+                          Development Phase
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-6 sm:p-8">
@@ -519,15 +552,21 @@ const Portfolio = () => {
                           {currentProject.title}
                         </h3>
                       </div>
-                      <a
-                        href={currentProject.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        <span className="text-sm font-medium">Visit</span>
-                      </a>
+                      {currentProject.link !== '#' ? (
+                        <a
+                          href={currentProject.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          <span className="text-sm font-medium">Visit</span>
+                        </a>
+                      ) : (
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+                          <span className="text-sm font-medium">In Development</span>
+                        </div>
+                      )}
                     </div>
 
                     <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg leading-relaxed">
