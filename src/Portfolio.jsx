@@ -1,773 +1,803 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, Menu, X, ArrowRight, Download, Phone, Calendar, MapPin, Users, Code, Zap, ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react';
-import y from "./assets/y.png";
-import v from "./assets/v.png";
-import s from "./assets/s.png";
-import b from "./assets/b.png";
-import f from "./assets/f.png";
-import p from "./assets/p.png";
-import d from "./assets/d.png";
-import a from "./assets/a.png";
-import c from "./assets/c.png";
-import Nazeeh_Nahaban from "./assets/Nazeeh_Nahaban.pdf";
+import { Linkedin, Mail, Phone, ArrowRight, Download, Calendar, MapPin, Users, Code, Zap, ExternalLink, ChevronRight, ChevronLeft, Menu, X, Github } from 'lucide-react';
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeProject, setActiveProject] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [loadingDone, setLoadingDone] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
+
+  const canvasRef = useRef(null);
+  const threeLoaded = useRef(false);
+  const rendererRef = useRef(null);
 
   const projects = [
-    {
-      title: 'Wavescation',
-      description: 'Dubai-based staycation booking platform with AFS payment gateway integration and complete management system for both users and admins.',
-      tech: ['React.js', 'Node.js', 'MongoDB', 'AFS Payment', 'Docker', 'Google Cloud Run'],
-      link: 'https://www.wavescation.com/',
-      image: v,
-      location: 'Dubai, UAE',
-      type: 'Booking Platform',
-      features: ['Real-time availability', 'AFS Payment Gateway', 'Admin Dashboard', 'Booking Management'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'ecommerce'
-    },
-    {
-      title: 'Eventra',
-      description: 'Dubai-based platform for booking events, parties, and hosting social gatherings with complete event management system and ticketing.',
-      tech: ['MERN Stack', 'Stripe Payments', 'AWS S3', 'Redis', 'Docker'],
-      link: 'https://www.eventra.club/',
-      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800',
-      location: 'Dubai, UAE',
-      type: 'Event Booking Platform',
-      features: ['Event Booking System', 'Party Hosting', 'Ticketing', 'Real-time Updates', 'Social Features'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'platform'
-    },
-    {
-      title: 'Dubai Communities',
-      description: 'Mobile application for connecting communities in Dubai, enabling users to host meetups, join existing communities, and participate in local events.',
-      tech: ['React Native', 'Node.js', 'MongoDB', 'Express.js', 'Firebase', 'Socket.io'],
-      link: '#',
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800',
-      location: 'Dubai, UAE',
-      type: 'Community Mobile App',
-      features: ['Community Creation', 'Meetup Hosting', 'Event Discovery', 'Real-time Chat', 'Push Notifications'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'mobile'
-    },
-    {
-      title: 'Simpolo Trading',
-      description: 'Tiles and sanitary trading company platform with complete admin management, product listing, and inquiry setup for Dubai and Sharjah markets.',
-      tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS', 'Docker'],
-      link: 'https://simpolotrading.com/',
-      image: s,
-      location: 'Dubai & Sharjah, UAE',
-      type: 'E-commerce',
-      features: ['Product Management', 'Order Tracking', 'Admin Panel', 'Inventory System'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'ecommerce'
-    },
-    {
-      title: 'Foscape Aquatic Care',
-      description: 'Complete e-commerce and service platform for aquatic solutions and landscaping company based in Kerala, India.',
-      tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS S3', 'Cloudinary'],
-      link: 'https://www.thefoscape.com/',
-      image: c,
-      location: 'Kerala, India',
-      type: 'E-commerce & Services',
-      features: ['Service Booking', 'E-commerce', 'Team Management', 'Product Catalog'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'services'
-    },
-    {
-      title: 'DD Events UAE',
-      description: 'Event management company platform based in Abu Dhabi, UAE with booking system and gallery management.',
-      tech: ['React.js', 'Node.js', 'MongoDB', 'Express', 'AWS'],
-      link: 'https://www.ddeventsuae.com/',
-      image: d,
-      location: 'Abu Dhabi, UAE',
-      type: 'Event Management',
-      features: ['Event Booking', 'Gallery Management', 'Client Dashboard', 'Service Packages'],
-      year: '2023',
-      role: 'Full Stack Developer',
-      category: 'services'
-    },
-    {
-      title: 'Arren Medical Clinic',
-      description: 'Complete clinic management solution for a company based in Saudi Arabia with patient management and appointment system.',
-      tech: ['React.js', 'Node.js', 'MongoDB', 'Tailwind', 'AWS'],
-      link: 'https://arren-ksa-frontend.vercel.app/',
-      image: a,
-      location: 'Saudi Arabia',
-      type: 'Clinic Management',
-      features: ['Patient Management', 'Appointment System', 'Medical Records', 'Billing'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'healthcare'
-    },
-    {
-      title: 'Pitchify',
-      description: 'Platform connecting entrepreneurs and investors through video pitching with video call, chat options, and Stripe payment gateway.',
-      tech: ['MERN Stack', 'Socket.io', 'WebRTC', 'Redis', 'Docker', 'Stripe'],
-      link: 'https://pitchify-frontend.vercel.app/',
-      image: p,
-      location: 'Global',
-      type: 'Startup Platform',
-      features: ['Video Pitching', 'Real-time Chat', 'Stripe Payments', 'Investor Network'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'platform'
-    },
-    {
-      title: 'Flybuybrand',
-      description: 'Multi-vendor e-commerce platform for clothing, accessories, and home appliances based in Kerala, India and Dubai.',
-      tech: ['React.js', 'Node.js', 'MongoDB Atlas', 'WhatsApp API', 'Razorpay', 'AWS'],
-      link: 'https://flybuybrand.com/',
-      image: f,
-      location: 'Kerala & Dubai',
-      type: 'Multi-vendor E-commerce',
-      features: ['Multi-vendor', 'WhatsApp Integration', 'Seller Dashboard', 'Affiliate System'],
-      year: '2024',
-      role: 'Full Stack Developer',
-      category: 'ecommerce'
-    },
-    {
-      title: 'Bespoke Shopping',
-      description: 'Complete e-commerce platform with server-side rendering and elegant UI for clothing and fashion products.',
-      tech: ['Node.js', 'Express.js', 'MongoDB', 'EJS', 'Bootstrap', 'Docker', 'Kubernetes'],
-      link: 'https://bespoke-gwop.onrender.com',
-      image: b,
-      location: 'Global',
-      type: 'E-commerce',
-      features: ['Social Login', 'Wishlist', 'Order Management', 'Admin Panel'],
-      year: '2023',
-      role: 'Full Stack Developer',
-      category: 'ecommerce'
-    },
-    {
-      title: 'Ayurcare Wellness',
-      description: 'Services listing website with modern UI for wellness center based in Kerala, showcasing treatments and bookings.',
-      tech: ['React', 'Tailwind CSS', 'Framer Motion', 'EmailJS'],
-      link: 'https://ayurcare-wellness.vercel.app/',
-      image: y,
-      location: 'Kerala, India',
-      type: 'Wellness Platform',
-      features: ['Service Listings', 'Booking System', 'Responsive Design', 'Contact Management'],
-      year: '2024',
-      role: 'Frontend Developer',
-      category: 'healthcare'
-    }
+    { title: 'Wavescation', description: 'Dubai-based staycation booking platform with AFS payment gateway integration and complete management system for both users and admins.', tech: ['React.js', 'Node.js', 'MongoDB', 'AFS Payment', 'Docker', 'Google Cloud Run'], link: 'https://www.wavescation.com/', image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800', location: 'Dubai, UAE', type: 'Booking Platform', features: ['Real-time Availability', 'AFS Payment Gateway', 'Admin Dashboard', 'Booking Management'], year: '2024', role: 'Full Stack Developer', category: 'ecommerce', color: '#E8C170' },
+    { title: 'Eventra', description: 'Dubai-based platform for booking events, parties, and hosting social gatherings with complete event management and ticketing.', tech: ['MERN Stack', 'Stripe', 'AWS S3', 'Redis', 'Docker'], link: 'https://www.eventra.club/', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800', location: 'Dubai, UAE', type: 'Event Booking', features: ['Event Booking', 'Party Hosting', 'Ticketing', 'Real-time Updates'], year: '2024', role: 'Full Stack Developer', category: 'platform', color: '#C470E8' },
+    { title: 'Dubai Communities', description: 'Mobile application for connecting communities in Dubai, enabling users to host meetups, join existing communities, and participate in local events.', tech: ['React Native', 'Node.js', 'MongoDB', 'Firebase', 'Socket.io'], link: '#', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800', location: 'Dubai, UAE', type: 'Community App', features: ['Community Creation', 'Meetup Hosting', 'Real-time Chat', 'Push Notifications'], year: '2024', role: 'Full Stack Developer', category: 'mobile', color: '#70E8C1' },
+    { title: 'Simpolo Trading', description: 'Tiles and sanitary trading company platform with complete admin management, product listing, and inquiry setup for Dubai and Sharjah markets.', tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS', 'Docker'], link: 'https://simpolotrading.com/', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800', location: 'Dubai & Sharjah, UAE', type: 'E-commerce', features: ['Product Management', 'Order Tracking', 'Admin Panel', 'Inventory'], year: '2024', role: 'Full Stack Developer', category: 'ecommerce', color: '#E87070' },
+    { title: 'Foscape Aquatic', description: 'Complete e-commerce and service platform for aquatic solutions and landscaping company based in Kerala, India.', tech: ['React.js', 'Node.js', 'MongoDB', 'Razorpay', 'AWS S3', 'Cloudinary'], link: 'https://www.thefoscape.com/', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800', location: 'Kerala, India', type: 'E-commerce & Services', features: ['Service Booking', 'E-commerce', 'Team Management', 'Product Catalog'], year: '2024', role: 'Full Stack Developer', category: 'services', color: '#70B8E8' },
+    { title: 'DD Events UAE', description: 'Event management company platform based in Abu Dhabi, UAE with booking system and gallery management.', tech: ['React.js', 'Node.js', 'MongoDB', 'Express', 'AWS'], link: 'https://www.ddeventsuae.com/', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800', location: 'Abu Dhabi, UAE', type: 'Event Management', features: ['Event Booking', 'Gallery Management', 'Client Dashboard', 'Service Packages'], year: '2023', role: 'Full Stack Developer', category: 'services', color: '#E8A870' },
+    { title: 'Arren Medical Clinic', description: 'Complete clinic management solution for a company in Saudi Arabia with patient management and appointment system.', tech: ['React.js', 'Node.js', 'MongoDB', 'Tailwind', 'AWS'], link: 'https://arren-ksa-frontend.vercel.app/', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800', location: 'Saudi Arabia', type: 'Clinic Management', features: ['Patient Management', 'Appointment System', 'Medical Records', 'Billing'], year: '2024', role: 'Full Stack Developer', category: 'healthcare', color: '#70E870' },
+    { title: 'Pitchify', description: 'Platform connecting entrepreneurs and investors through video pitching with video call, chat, and Stripe payment gateway.', tech: ['MERN Stack', 'Socket.io', 'WebRTC', 'Redis', 'Docker', 'Stripe'], link: 'https://pitchify-frontend.vercel.app/', image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800', location: 'Global', type: 'Startup Platform', features: ['Video Pitching', 'Real-time Chat', 'Stripe Payments', 'Investor Network'], year: '2024', role: 'Full Stack Developer', category: 'platform', color: '#E8E870' },
+    { title: 'Flybuybrand', description: 'Multi-vendor e-commerce platform for clothing, accessories, and home appliances based in Kerala and Dubai.', tech: ['React.js', 'Node.js', 'MongoDB Atlas', 'WhatsApp API', 'Razorpay', 'AWS'], link: 'https://flybuybrand.com/', image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=800', location: 'Kerala & Dubai', type: 'Multi-vendor E-commerce', features: ['Multi-vendor', 'WhatsApp Integration', 'Seller Dashboard', 'Affiliate System'], year: '2024', role: 'Full Stack Developer', category: 'ecommerce', color: '#E870AA' },
+    { title: 'Bespoke Shopping', description: 'Complete e-commerce platform with server-side rendering and elegant UI for clothing and fashion products.', tech: ['Node.js', 'Express.js', 'MongoDB', 'EJS', 'Bootstrap', 'Docker', 'Kubernetes'], link: 'https://bespoke-gwop.onrender.com', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800', location: 'Global', type: 'E-commerce', features: ['Social Login', 'Wishlist', 'Order Management', 'Admin Panel'], year: '2023', role: 'Full Stack Developer', category: 'ecommerce', color: '#AA70E8' },
+    { title: 'Ayurcare Wellness', description: 'Services listing website with modern UI for wellness center in Kerala, showcasing treatments and bookings.', tech: ['React', 'Tailwind CSS', 'Framer Motion', 'EmailJS'], link: 'https://ayurcare-wellness.vercel.app/', image: 'https://images.unsplash.com/photo-1600618528240-fb9fc964b853?auto=format&fit=crop&w=800', location: 'Kerala, India', type: 'Wellness Platform', features: ['Service Listings', 'Booking System', 'Responsive Design', 'Contact Management'], year: '2024', role: 'Frontend Developer', category: 'healthcare', color: '#70E8A8' },
+    { title: 'SecondWave', description: 'Kerala-based digital marketing agency website showcasing SEO, social media, and content marketing services with modern design.', tech: ['React.js', 'Tailwind CSS', 'GSAP', 'EmailJS', 'Vercel'], link: 'https://secondwave.in/', image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=800', location: 'Kerala, India', type: 'Agency Website', features: ['Service Showcase', 'Portfolio Gallery', 'Contact System', 'Blog'], year: '2024', role: 'Full Stack Developer', category: 'services', color: '#E87890' },
+    { title: 'Alrkn Alraqy', description: 'Hotel management and booking platform serving Middle East, Africa, and Europe markets with multilingual support and complete reservation system.', tech: ['MERN Stack', 'Stripe', 'AWS', 'Redis', 'i18n', 'Docker'], link: 'https://alrknalraqy.in', image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800', location: 'Middle East, Africa & Europe', type: 'Hotel Booking', features: ['Multi-language', 'Hotel Reservations', 'Admin Dashboard', 'Payment Integration', 'Reviews'], year: '2024', role: 'Full Stack Developer', category: 'platform', color: '#C8A050' },
+    { title: 'FlyHomies', description: 'Dubai-based software development company website showcasing services, portfolio, and team with modern animations.', tech: ['React.js', 'Three.js', 'GSAP', 'Tailwind CSS', 'Vercel'], link: 'https://www.flyhomies.com/', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800', location: 'Dubai, UAE', type: 'Company Website', features: ['Service Portfolio', 'Team Showcase', 'Contact System', '3D Animations'], year: '2024', role: 'Full Stack Developer', category: 'services', color: '#70A0E8' }
   ];
 
   const experiences = [
-    {
-      title: "Full Stack Developer",
-      company: "FlyHomes Associates - Remote",
-      period: "Dec 2024 - Jan 2026",
-      description: "Led development of UAE-based platforms including staycation booking and B2B trading systems with secure payment integrations.",
-      icon: <Code className="w-6 h-6" />
-    },
-    {
-      title: "Full Stack Developer (Freelance)",
-      company: "Multiple International Clients",
-      period: "Jan 2024 - Dec 2024",
-      description: "Developed scalable web applications for UAE, KSA, and Indian clients using MERN stack. Implemented payment gateways and cloud deployment solutions.",
-      icon: <Users className="w-6 h-6" />
-    },
-    {
-      title: "MERN Stack Developer",
-      company: "Brototype - Calicut, Kerala",
-      period: "May 2023 - Dec 2024",
-      description: "Built e-commerce platforms and property management systems while exploring microservices architecture.",
-      icon: <Zap className="w-6 h-6" />
-    }
+    { title: 'Full Stack Developer', company: 'FlyHomes Associates', location: 'Remote', period: 'Dec 2024 – Jan 2026', description: 'Led development of UAE-based platforms including staycation booking and B2B trading systems with secure payment integrations.', color: '#E8C170' },
+    { title: 'Full Stack Developer', company: 'Multiple International Clients', location: 'Freelance', period: 'Jan 2024 – Dec 2024', description: 'Developed scalable web applications for UAE, KSA, and Indian clients using MERN stack. Implemented payment gateways and cloud deployment solutions.', color: '#C470E8' },
+    { title: 'MERN Stack Developer', company: 'Brototype', location: 'Calicut, Kerala', period: 'May 2023 – Dec 2024', description: 'Built e-commerce platforms and property management systems while exploring microservices architecture and modern DevOps practices.', color: '#70E8C1' }
   ];
 
-  const services = [
-    { title: "Website Development", description: "Custom-built websites tailored to your vision.", icon: "🛠️" },
-    { title: "SEO Optimized", description: "Engineered for better visibility and higher rankings.", icon: "🔍" },
-    { title: "Modern Design", description: "Clean, contemporary UI that reflects your brand.", icon: "🎨" },
-    { title: "Responsive", description: "Perfect experience across devices and screen sizes.", icon: "📱" },
-    { title: "API Integration", description: "Third-party services and APIs integration.", icon: "🔌" },
-    { title: "Support & Maintenance", description: "Ongoing support to keep projects functional.", icon: "⚙️" }
+  const skills = [
+    { name: 'React.js', level: 95, icon: '⚛' }, { name: 'Node.js', level: 92, icon: '🟢' },
+    { name: 'MongoDB', level: 90, icon: '🍃' }, { name: 'Docker', level: 85, icon: '🐳' },
+    { name: 'TypeScript', level: 82, icon: '📘' }, { name: 'AWS', level: 80, icon: '☁' },
+    { name: 'Socket.io', level: 88, icon: '⚡' }, { name: 'React Native', level: 75, icon: '📱' },
+    { name: 'Redis', level: 78, icon: '🔴' }, { name: 'Three.js', level: 65, icon: '🔮' },
+    { name: 'PostgreSQL', level: 72, icon: '🐘' }, { name: 'GraphQL', level: 70, icon: '◈' }
   ];
 
-  const filteredProjects = activeFilter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === activeFilter);
-
-  const currentProject = filteredProjects[activeProject];
+  const filteredProjects = activeFilter === 'all' ? projects : projects.filter(p => p.category === activeFilter);
+  const safeIdx = Math.min(activeProject, filteredProjects.length - 1);
+  const cur = filteredProjects[safeIdx] || projects[0];
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      
-      const sections = ['home', 'about', 'projects', 'experience', 'contact'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
-    };
-
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    let p = 0;
+    const t = setInterval(() => {
+      p += Math.random() * 18 + 5;
+      if (p >= 100) {
+        p = 100;
+        clearInterval(t);
+        setTimeout(() => setLoadingDone(true), 500);
+      }
+      setLoadProgress(Math.min(p, 100));
+    }, 100);
+    return () => clearInterval(t);
   }, []);
 
   useEffect(() => {
-    setActiveProject(0);
-  }, [activeFilter]);
+    const fn = () => {
+      setScrolled(window.scrollY > 60);
+      const secs = ['home', 'projects', 'about', 'skills', 'experience', 'contact'];
+      for (const s of secs) {
+        const el = document.getElementById(s);
+        if (el) {
+          const r = el.getBoundingClientRect();
+          if (r.top <= 150 && r.bottom >= 150) { setActiveSection(s); break; }
+        }
+      }
+    };
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
 
-  const scrollToSection = (id) => {
+  useEffect(() => {
+    if (!loadingDone || threeLoaded.current) return;
+    threeLoaded.current = true;
+
+    const initThree = () => {
+      const canvas = canvasRef.current;
+      if (!canvas || !window.THREE) return;
+
+      const T = window.THREE;
+
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
+        rendererRef.current = null;
+      }
+
+      let renderer;
+      try {
+        renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'default' });
+      } catch (e) {
+        return;
+      }
+
+      renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      rendererRef.current = renderer;
+
+      const scene = new T.Scene();
+      const camera = new T.PerspectiveCamera(60, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+      camera.position.z = 35;
+
+      const N = 800;
+      const geo = new T.BufferGeometry();
+      const pos = new Float32Array(N * 3);
+      
+      for (let i = 0; i < N; i++) {
+        const r = 25 + Math.random() * 15;
+        const th = Math.random() * Math.PI * 2;
+        const ph = Math.acos(2 * Math.random() - 1);
+        pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
+        pos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th) * 0.25;
+        pos[i * 3 + 2] = r * Math.cos(ph);
+      }
+      
+      geo.setAttribute('position', new T.BufferAttribute(pos, 3));
+      
+      const pts = new T.Points(
+        geo, 
+        new T.PointsMaterial({ 
+          color: 0xc8a050, 
+          size: 0.15, 
+          transparent: true, 
+          opacity: 0.25 
+        })
+      );
+      scene.add(pts);
+
+      let mx = 0, my = 0, animId;
+      const onM = (e) => {
+        mx = (e.clientX / window.innerWidth - 0.5) * 2;
+        my = -(e.clientY / window.innerHeight - 0.5) * 2;
+      };
+      window.addEventListener('mousemove', onM);
+
+      const onR = () => {
+        if (!canvas || !renderer) return;
+        renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+        camera.aspect = canvas.offsetWidth / canvas.offsetHeight;
+        camera.updateProjectionMatrix();
+      };
+      window.addEventListener('resize', onR);
+
+      let t = 0;
+      const loop = () => {
+        animId = requestAnimationFrame(loop);
+        t += 0.001;
+        pts.rotation.y = t * 0.08 + mx * 0.03;
+        pts.rotation.x = my * 0.02;
+        try { renderer.render(scene, camera); } catch (e) { cancelAnimationFrame(animId); }
+      };
+      loop();
+
+      return () => {
+        cancelAnimationFrame(animId);
+        window.removeEventListener('mousemove', onM);
+        window.removeEventListener('resize', onR);
+        geo.dispose();
+        renderer.dispose();
+      };
+    };
+
+    if (window.THREE) {
+      initThree();
+    } else {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onload = initThree;
+      document.head.appendChild(s);
+    }
+  }, [loadingDone]);
+
+  useEffect(() => {
+    if (!loadingDone) return;
+
+    const loadGSAP = async () => {
+      const loadScript = (src) => new Promise((res) => {
+        if (document.querySelector(`script[src="${src}"]`)) { res(); return; }
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = res;
+        s.onerror = res;
+        document.head.appendChild(s);
+      });
+
+      if (!window.gsap) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+      }
+
+      requestAnimationFrame(() => {
+        setTimeout(() => runAnims(), 100);
+      });
+    };
+
+    loadGSAP();
+  }, [loadingDone]);
+
+  const runAnims = () => {
+    const gsap = window.gsap;
+    const ST = window.ScrollTrigger;
+    if (!gsap) return;
+    if (ST) gsap.registerPlugin(ST);
+
+    const heroChars = document.querySelectorAll('.hc');
+    if (heroChars.length > 0) {
+      gsap.fromTo(heroChars,
+        { yPercent: 120, opacity: 0, rotationX: -90, transformOrigin: 'center bottom' },
+        { yPercent: 0, opacity: 1, rotationX: 0, duration: 1, ease: 'expo.out', stagger: 0.035, delay: 0.2 }
+      );
+    }
+
+    const heroSubs = document.querySelectorAll('.hsub');
+    if (heroSubs.length > 0) {
+      gsap.fromTo(heroSubs,
+        { y: 50, opacity: 0, filter: 'blur(8px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power4.out', stagger: 0.12, delay: 1.0 }
+      );
+    }
+
+    const heroCtas = document.querySelectorAll('.hcta');
+    if (heroCtas.length > 0) {
+      gsap.fromTo(heroCtas,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.8, ease: 'back.out(1.8)', stagger: 0.1, delay: 1.7 }
+      );
+    }
+
+    const badge = document.querySelector('.hbadge');
+    if (badge) {
+      gsap.fromTo(badge, { y: -28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.1 });
+    }
+
+    const mq1 = document.querySelector('.mq1');
+    const mq2 = document.querySelector('.mq2');
+    if (mq1) gsap.to(mq1, { x: '-50%', duration: 22, ease: 'none', repeat: -1 });
+    if (mq2) gsap.to(mq2, { x: '50%', duration: 28, ease: 'none', repeat: -1 });
+
+    if (!ST) return;
+
+    const orb1 = document.querySelector('.orb1');
+    const orb2 = document.querySelector('.orb2');
+    if (orb1) gsap.to(orb1, { y: -100, ease: 'none', scrollTrigger: { trigger: '#home', scrub: 2 } });
+    if (orb2) gsap.to(orb2, { y: 80, ease: 'none', scrollTrigger: { trigger: '#home', scrub: 1.5 } });
+
+    document.querySelectorAll('.lbl').forEach(el => {
+      gsap.fromTo(el,
+        { clipPath: 'inset(0 100% 0 0)', opacity: 1 },
+        { clipPath: 'inset(0 0% 0 0)', duration: 0.8, ease: 'power3.inOut', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }
+      );
+    });
+
+    document.querySelectorAll('.clip-wipe').forEach(el => {
+      gsap.fromTo(el,
+        { clipPath: 'inset(0 100% 0 0)', opacity: 1 },
+        { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power4.inOut', scrollTrigger: { trigger: el, start: 'top 82%', once: true } }
+      );
+    });
+
+    document.querySelectorAll('.cc').forEach((el, i) => {
+      gsap.fromTo(el,
+        { y: 70, opacity: 0, scale: 0.95 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true }, delay: (i % 4) * 0.08 }
+      );
+    });
+
+    document.querySelectorAll('.sbar').forEach(el => {
+      const w = el.getAttribute('data-w');
+      gsap.fromTo(el,
+        { width: '0%' },
+        { width: w + '%', duration: 1.6, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }
+      );
+    });
+
+    const tline = document.querySelector('.tline');
+    if (tline) {
+      gsap.fromTo(tline,
+        { scaleY: 0 },
+        { scaleY: 1, duration: 2.5, ease: 'power2.out', transformOrigin: 'top center', scrollTrigger: { trigger: tline, start: 'top 75%', once: true } }
+      );
+    }
+
+    const abl = document.querySelector('.abl');
+    const abr = document.querySelector('.abr');
+    if (abl) {
+      gsap.fromTo(abl,
+        { x: -80, opacity: 0, filter: 'blur(6px)' },
+        { x: 0, opacity: 1, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out', scrollTrigger: { trigger: abl, start: 'top 80%', once: true } }
+      );
+    }
+    if (abr) {
+      gsap.fromTo(abr,
+        { x: 80, opacity: 0, filter: 'blur(6px)' },
+        { x: 0, opacity: 1, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out', scrollTrigger: { trigger: abr, start: 'top 80%', once: true } }
+      );
+    }
+
+    document.querySelectorAll('.ccard').forEach((el, i) => {
+      gsap.fromTo(el,
+        { y: 80, opacity: 0, scale: 0.85 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(2)', scrollTrigger: { trigger: el, start: 'top 88%', once: true }, delay: i * 0.1 }
+      );
+    });
+  };
+
+  const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setIsMenuOpen(false);
   };
 
-  const downloadCV = () => {
-    const link = document.createElement('a');
-    link.href = Nazeeh_Nahaban;
-    link.download = 'Nazeeh_Nahaban_CV.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const nextProject = () => {
-    if (isAnimating || filteredProjects.length === 0) return;
-    setIsAnimating(true);
-    setActiveProject((prev) => (prev + 1) % filteredProjects.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
-
-  const prevProject = () => {
-    if (isAnimating || filteredProjects.length === 0) return;
-    setIsAnimating(true);
-    setActiveProject((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
-
-  const scrollToProject = (index) => {
+  const nextProj = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setActiveProject(index);
+    if (window.gsap) {
+      window.gsap.fromTo('.pca', { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' });
+    }
+    setActiveProject(p => (p + 1) % filteredProjects.length);
     setTimeout(() => setIsAnimating(false), 500);
   };
 
+  const prevProj = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    if (window.gsap) {
+      window.gsap.fromTo('.pca', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' });
+    }
+    setActiveProject(p => (p - 1 + filteredProjects.length) % filteredProjects.length);
+    setTimeout(() => setIsAnimating(false), 500);
+  };
+
+  useEffect(() => {
+    setActiveProject(0);
+    if (window.gsap) {
+      window.gsap.fromTo('.pca', { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
+    }
+  }, [activeFilter]);
+
+  const nameChars = 'Nazeeh Nahaban'.split('').map((ch, i) => (
+    <span key={i} className="hc" style={{ display: 'inline-block', whiteSpace: ch === ' ' ? 'pre' : 'normal' }}>{ch}</span>
+  ));
+
+  const gold = '#c8a050';
+  const bg = '#070503';
+  const fg = '#e8ddd0';
+  const fgA = (a) => `rgba(232,221,208,${a})`;
+  const goldA = (a) => `rgba(200,160,80,${a})`;
+  const border = 'rgba(255,255,255,0.06)';
+  const borderGold = 'rgba(200,160,80,0.18)';
+  const panel = 'rgba(255,255,255,0.02)';
+  const serif = '"Cormorant Garamond", Georgia, serif';
+  const display = '"Bebas Neue", sans-serif';
+  const mono = '"DM Mono", monospace';
+
+  if (!loadingDone) {
+    return (
+      <div style={{ background: bg, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&family=Bebas+Neue&family=DM+Mono:wght@300;400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+          body { margin: 0; }
+        `}</style>
+        <div style={{ width: 72, height: 72, borderRadius: '50%', border: `1px solid ${goldA(0.35)}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40, boxShadow: `0 0 40px ${goldA(0.12)}` }}>
+          <span style={{ fontFamily: display, fontSize: 24, letterSpacing: 3, color: gold }}>NN</span>
+        </div>
+        <div style={{ width: 180, height: 1, background: 'rgba(255,255,255,0.07)', marginBottom: 12 }}>
+          <div style={{ height: '100%', background: `linear-gradient(90deg, ${gold}, #e8d090)`, width: `${loadProgress}%`, transition: 'width 0.12s ease' }} />
+        </div>
+        <p style={{ fontFamily: mono, fontSize: 10, letterSpacing: 4, color: fgA(0.2), textTransform: 'uppercase' }}>
+          {loadProgress < 100 ? `Loading ${Math.round(loadProgress)}%` : 'Welcome'}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 text-slate-900 dark:text-white">
-      <div
-        className="pointer-events-none fixed inset-0 z-30 transition duration-300"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(37, 99, 235, 0.08), transparent 40%)`
-        }}
-      />
+    <div style={{ background: bg, color: fg, fontFamily: '"DM Sans", system-ui, sans-serif', overflowX: 'hidden', minHeight: '100vh' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Bebas+Neue&family=DM+Mono:wght@300;400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+        * { box-sizing: border-box; }
+        body { margin: 0; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #070503; }
+        ::-webkit-scrollbar-thumb { background: #c8a050; border-radius: 2px; }
+        ::selection { background: rgba(200,160,80,0.25); color: #fff; }
+        .nav-a { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(232,221,208,0.35); cursor: pointer; transition: color .3s; position: relative; padding: 4px 0; }
+        .nav-a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: #c8a050; transition: width .4s cubic-bezier(.4,0,.2,1); }
+        .nav-a:hover, .nav-a.on { color: #c8a050; }
+        .nav-a:hover::after, .nav-a.on::after { width: 100%; }
+        .gbtn { background: linear-gradient(135deg, #b8902a, #e8c870); color: #070503; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 400; border: none; cursor: pointer; transition: all .35s cubic-bezier(.4,0,.2,1); display: inline-flex; align-items: center; gap: 8px; }
+        .gbtn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,160,80,0.45); }
+        .obtn { background: transparent; font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all .35s; border: 1px solid rgba(200,160,80,0.3); color: #c8a050; display: inline-flex; align-items: center; gap: 7px; }
+        .obtn:hover { border-color: #c8a050; background: rgba(200,160,80,0.07); transform: translateY(-2px); }
+        .fpill { background: transparent; border: 1px solid rgba(255,255,255,0.07); color: rgba(232,221,208,0.35); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; padding: 8px 18px; border-radius: 100px; transition: all .3s; }
+        .fpill:hover { border-color: rgba(200,160,80,0.4); color: #c8a050; }
+        .fpill.on { background: rgba(200,160,80,0.1); border-color: #c8a050; color: #c8a050; }
+        .pi { overflow: hidden; position: relative; }
+        .pi img { transition: transform .7s cubic-bezier(.4,0,.2,1); display: block; width: 100%; height: 100%; object-fit: cover; }
+        .pi:hover img { transform: scale(1.05); }
+        .ecard { border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); transition: all .4s cubic-bezier(.4,0,.2,1); border-radius: 2px; }
+        .ecard:hover { border-color: rgba(200,160,80,0.2); background: rgba(200,160,80,0.03); transform: translateX(10px); }
+        .stag { display: inline-block; padding: 4px 13px; border-radius: 100px; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .svc-card { border: 1px solid rgba(255,255,255,0.05); background: transparent; position: relative; transition: all .4s; cursor: default; }
+        .svc-card:hover { border-color: rgba(200,160,80,0.2); background: rgba(200,160,80,0.025); transform: translateY(-4px); }
+        .proj-list-btn { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: none; cursor: pointer; transition: all .3s; border-radius: 2px; background: transparent; text-align: left; width: 100%; }
+        .proj-list-btn:hover { background: rgba(200,160,80,0.04); }
+        .proj-list-btn.active-proj { background: rgba(200,160,80,0.07); outline: 1px solid rgba(200,160,80,0.2); }
+        @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.4); } 50% { box-shadow: 0 0 0 8px rgba(74,222,128,0); } }
+        @media (max-width: 900px) {
+          .hd-nav, .hd-btns { display: none !important; }
+          .hd-mb { display: flex !important; }
+          .proj-grid { grid-template-columns: 1fr !important; }
+          .about-grid { grid-template-columns: 1fr !important; }
+          .hero-name h1 { font-size: clamp(52px, 14vw, 90px) !important; }
+          .hero-bottom { flex-direction: column !important; align-items: flex-start !important; }
+          .hero-stats { align-items: flex-start !important; flex-direction: row !important; gap: 28px !important; }
+        }
+      `}</style>
 
-      <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg shadow-blue-500/5 border-b border-slate-200 dark:border-slate-800' 
-          : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <button
-              onClick={() => scrollToSection('home')}
-              className="text-2xl font-bold tracking-tighter bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent hover:scale-105 transition-transform"
-            >
-              NN
-            </button>
+      <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none', opacity: 0.25 }} />
 
-            <nav className="hidden md:flex items-center space-x-8">
-              {['Home', 'Projects', 'About', 'Experience', 'Contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className={`text-sm font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 ${
-                    activeSection === item.toLowerCase()
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-slate-600 dark:text-slate-400'
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </nav>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <div className="orb1" style={{ position: 'absolute', top: '5%', left: '5%', width: 600, height: 600, borderRadius: '50%', background: `radial-gradient(circle, ${goldA(0.03)} 0%, transparent 65%)`, filter: 'blur(60px)' }} />
+        <div className="orb2" style={{ position: 'absolute', bottom: '10%', right: '5%', width: 450, height: 450, borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,80,200,0.02) 0%, transparent 65%)', filter: 'blur(60px)' }} />
+      </div>
 
-            <div className="hidden md:flex items-center gap-4">
-              <button
-                onClick={downloadCV}
-                className="px-6 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all duration-300 text-sm font-medium flex items-center gap-2 border border-slate-200 dark:border-slate-700"
-              >
-                <Download className="w-4 h-4" />
-                Download CV
-              </button>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white transition-all duration-300 text-sm font-medium shadow-lg shadow-blue-500/25"
-              >
-                Book a Call
-              </button>
-            </div>
+      <header style={{ position: 'fixed', top: 0, width: '100%', zIndex: 100, transition: 'all .5s', background: scrolled ? 'rgba(7,5,3,0.9)' : 'transparent', backdropFilter: scrolled ? 'blur(24px)' : 'none', borderBottom: scrolled ? `1px solid ${borderGold}` : 'none' }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', padding: '0 40px', height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <button onClick={() => scrollTo('home')} style={{ fontFamily: display, fontSize: 24, letterSpacing: 4, color: gold, background: 'none', border: 'none', cursor: 'pointer' }}>NN</button>
 
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+          <nav className="hd-nav" style={{ display: 'flex', gap: 40 }}>
+            {['Home', 'Projects', 'About', 'Skills', 'Experience', 'Contact'].map(n => (
+              <span key={n} className={`nav-a ${activeSection === n.toLowerCase() ? 'on' : ''}`} onClick={() => scrollTo(n.toLowerCase())}>{n}</span>
+            ))}
+          </nav>
+
+          <div className="hd-btns" style={{ display: 'flex', gap: 12 }}>
+            <button className="obtn" style={{ padding: '10px 22px', borderRadius: 2 }}>Download CV</button>
+            <button className="gbtn" onClick={() => scrollTo('contact')} style={{ padding: '10px 24px', borderRadius: 2 }}>Let's Talk <ArrowRight size={12} /></button>
           </div>
+
+          <button className="hd-mb" onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ display: 'none', background: 'none', border: `1px solid ${borderGold}`, color: gold, cursor: 'pointer', padding: '9px 10px', borderRadius: 2, alignItems: 'center' }}>
+            {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
-            <div className="px-4 py-4 space-y-3">
-              {['Home', 'Projects', 'About', 'Experience', 'Contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className="block w-full text-left text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2 font-medium"
-                >
-                  {item}
-                </button>
-              ))}
-              <button
-                onClick={downloadCV}
-                className="w-full px-6 py-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all duration-300 font-medium flex items-center justify-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Download CV
-              </button>
+          <div style={{ background: 'rgba(7,5,3,0.97)', backdropFilter: 'blur(20px)', borderTop: `1px solid ${borderGold}`, padding: '24px 40px' }}>
+            {['Home', 'Projects', 'About', 'Skills', 'Experience', 'Contact'].map(n => (
+              <div key={n} onClick={() => scrollTo(n.toLowerCase())} style={{ fontFamily: display, fontSize: 28, letterSpacing: 4, color: fgA(0.5), padding: '10px 0', borderBottom: `1px solid ${border}`, cursor: 'pointer' }}>{n}</div>
+            ))}
+            <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+              <button className="obtn" style={{ padding: '12px 22px', borderRadius: 2, flex: 1, justifyContent: 'center' }}>CV</button>
+              <button className="gbtn" onClick={() => scrollTo('contact')} style={{ padding: '12px 22px', borderRadius: 2, flex: 1, justifyContent: 'center' }}>Talk <ArrowRight size={12} /></button>
             </div>
           </div>
         )}
       </header>
 
-      <section id="home" className="relative min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {['⚛', '▲', '◆', 'TS', 'M', '🐳', '☁', 'T'].map((icon, index) => (
-            <div
-              key={index}
-              className="absolute w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold shadow-2xl bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-blue-500/20 dark:border-blue-400/20"
-              style={{
-                left: `${Math.random() * 80}%`,
-                top: `${Math.random() * 80}%`,
-                animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 2}s`
-              }}
-            >
-              {icon}
-            </div>
-          ))}
-        </div>
-        
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-block mb-6 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-950/50 border border-blue-300 dark:border-blue-800">
-            <span className="text-sm font-medium text-blue-700 dark:text-blue-400">
-              Based in Dubai • Available Worldwide
-            </span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-blue-600 via-cyan-600 to-sky-600 bg-clip-text text-transparent">
-              Hello, I'm Nazeeh Nahaban
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Self-taught Full-Stack Developer transforming ideas into production-ready web applications. Expert in the complete MERN stack with hands-on experience in secure API design, Docker containerization, and cloud deployment.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 flex items-center gap-2"
-            >
-              Start a Project
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <button
-              onClick={downloadCV}
-              className="px-8 py-4 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 font-medium transition-all duration-300 hover:scale-105 flex items-center gap-2"
-            >
-              <Download className="w-5 h-5" />
-              Download CV
-            </button>
+      <section id="home" style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '100px 40px 60px', zIndex: 2 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', width: '100%' }}>
+
+          <div className="hbadge" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '7px 20px', border: `1px solid ${borderGold}`, background: goldA(0.05), borderRadius: 100, marginBottom: 48 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', animation: 'pulse-dot 2s ease infinite' }} />
+            <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: goldA(0.75), textTransform: 'uppercase' }}>Available for Projects · Dubai, UAE</span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 text-slate-600 dark:text-slate-400">
-            <div className="flex items-center gap-2">
-              <Mail className="w-5 h-5 text-blue-600" />
-              <span className="text-sm">nazeehnahaban09@gmail.com</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Phone className="w-5 h-5 text-blue-600" />
-              <span className="text-sm">+971 50 788 9313</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              What I Provide
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Comprehensive web development services to bring your digital vision to life
-            </p>
+          <div className="hero-name" style={{ overflow: 'hidden', marginBottom: 8 }}>
+            <h1 style={{ fontFamily: serif, fontSize: 'clamp(60px, 11vw, 148px)', fontWeight: 300, letterSpacing: '-3px', color: fg, margin: 0, lineHeight: 0.88 }}>
+              {nameChars}
+            </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-800 dark:to-blue-950/20 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 group"
-              >
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {service.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">
-                  {service.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400">
-                  {service.description}
-                </p>
+          <div className="hero-bottom" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 32, marginTop: 48 }}>
+            <div style={{ flex: 1, minWidth: 280, maxWidth: 580 }}>
+              <p className="hsub" style={{ fontFamily: display, fontSize: 'clamp(20px, 3.5vw, 38px)', letterSpacing: 5, color: gold, marginBottom: 20, marginTop: 0 }}>Full-Stack Developer</p>
+              <p className="hsub" style={{ fontSize: 15, lineHeight: 1.85, color: fgA(0.42), fontWeight: 300, marginBottom: 36, marginTop: 0 }}>
+                Crafting production-ready applications with MERN stack expertise. Secure payment systems, cloud deployments, and real-time solutions for clients across UAE, India, and beyond.
+              </p>
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <button className="gbtn hcta" onClick={() => scrollTo('projects')} style={{ padding: '15px 36px', borderRadius: 2 }}>View Work <ArrowRight size={13} /></button>
+                <button className="obtn hcta" onClick={() => scrollTo('contact')} style={{ padding: '15px 36px', borderRadius: 2 }}>Start Project</button>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              About Me
-            </h2>
-            <div className="space-y-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              <p>
-                Self-taught Full-Stack Developer transforming ideas into production-ready web applications. Expert in the complete MERN stack with hands-on experience in secure API design, Docker containerization, and cloud deployment.
-              </p>
-              <p>
-                Successfully delivered functional, scalable solutions for UAE and global clients by bridging technical knowledge with practical implementation skills.
-              </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              Featured Projects
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Browse through my latest work. Use the filters below to explore specific categories.
-            </p>
-          </div>
-
-          <div className="mb-16">
-            <div className="flex flex-wrap justify-center gap-3">
-              <button
-                onClick={() => setActiveFilter('all')}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                  activeFilter === 'all'
-                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/20'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-blue-400'
-                }`}
-              >
-                <span>All Projects</span>
-                <span className="text-xs opacity-70">({projects.length})</span>
-              </button>
-              {['ecommerce', 'services', 'healthcare', 'platform', 'mobile'].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setActiveFilter(category)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                    activeFilter === category
-                      ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/20'
-                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-blue-400'
-                  }`}
-                >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </button>
+            <div className="hero-stats hsub" style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-end' }}>
+              {[['14+', 'Projects'], ['3+', 'Years Exp.'], ['5', 'Countries']].map(([n, l]) => (
+                <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <span style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: fgA(0.3), textTransform: 'uppercase' }}>{l}</span>
+                  <span style={{ fontFamily: display, fontSize: 50, color: gold, letterSpacing: 2, lineHeight: 1 }}>{n}</span>
+                </div>
               ))}
             </div>
           </div>
 
-          <div className="relative">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                  <div className="relative h-64 sm:h-80 overflow-hidden">
-                    <img
-                      src={currentProject.image}
-                      alt={currentProject.title}
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                    />
-                    <div className="absolute top-4 right-4">
-                      <span className="px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-sm font-medium text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600">
-                        {currentProject.year}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 left-4">
-                      <span className="px-3 py-1.5 rounded-full bg-blue-500 text-white text-sm font-medium">
-                        {currentProject.type}
-                      </span>
-                    </div>
-                    {currentProject.link === '#' && (
-                      <div className="absolute bottom-4 right-4">
-                        <span className="px-3 py-1.5 rounded-full bg-amber-500 text-white text-sm font-medium">
-                          Development Phase
-                        </span>
+          <div style={{ display: 'flex', gap: 32, marginTop: 60, flexWrap: 'wrap' }}>
+            {[
+              { icon: <Mail size={12} />, label: 'nazeehnahaban09@gmail.com', href: 'mailto:nazeehnahaban09@gmail.com' },
+              { icon: <Phone size={12} />, label: '+971 50 788 9313', href: 'tel:+971507889313' }
+            ].map((c, i) => (
+              <a key={i} href={c.href} style={{ fontFamily: mono, fontSize: 10, letterSpacing: 2, color: fgA(0.3), textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, transition: 'color .3s' }}
+                onMouseEnter={e => e.currentTarget.style.color = gold}
+                onMouseLeave={e => e.currentTarget.style.color = fgA(0.3)}>
+                {c.icon}{c.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 1, height: 48, background: `linear-gradient(to bottom, ${goldA(0.4)}, transparent)` }} />
+          <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 4, color: goldA(0.25), textTransform: 'uppercase' }}>Scroll</span>
+        </div>
+      </section>
+
+      <div style={{ overflow: 'hidden', borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}`, padding: '15px 0', position: 'relative', zIndex: 2 }}>
+        <div className="mq1" style={{ display: 'inline-flex', gap: 48, whiteSpace: 'nowrap' }}>
+          {Array(8).fill(['React.js', '◆', 'Node.js', '◆', 'MongoDB', '◆', 'Docker', '◆', 'AWS', '◆', 'Socket.io', '◆', 'Full-Stack Developer', '◆', 'Dubai Based', '◆']).flat().map((t, i) => (
+            <span key={i} style={{ fontFamily: display, fontSize: 13, letterSpacing: 3, color: t === '◆' ? gold : fgA(0.2), textTransform: 'uppercase' }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
+      <section id="projects" style={{ padding: '120px 40px', position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto' }}>
+
+          <div style={{ marginBottom: 64 }}>
+            <div className="lbl" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 5, textTransform: 'uppercase', color: gold, marginBottom: 20, display: 'inline-block' }}>Portfolio</div>
+            <h2 className="clip-wipe" style={{ fontFamily: serif, fontSize: 'clamp(52px, 8vw, 100px)', fontWeight: 300, lineHeight: 0.9, color: fg, margin: '0 0 24px 0' }}>
+              Featured <em style={{ fontStyle: 'italic', color: gold }}>Projects</em>
+            </h2>
+            <p style={{ color: fgA(0.38), fontSize: 15, maxWidth: 420, lineHeight: 1.8, fontWeight: 300, margin: 0 }}>
+              {projects.length} production-ready applications built for clients across UAE, India, Saudi Arabia, and beyond.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 56 }}>
+            {[['all', `All (${projects.length})`], ['ecommerce', 'E-commerce'], ['services', 'Services'], ['healthcare', 'Healthcare'], ['platform', 'Platforms'], ['mobile', 'Mobile']].map(([v, l]) => (
+              <button key={v} className={`fpill ${activeFilter === v ? 'on' : ''}`} onClick={() => setActiveFilter(v)}>{l}</button>
+            ))}
+          </div>
+
+          <div className="proj-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 28 }}>
+
+            <div>
+              <div className="pca" style={{ border: `1px solid ${border}`, borderRadius: 2, overflow: 'hidden', background: panel, position: 'relative' }}>
+                {[
+                  { top: 14, left: 14, borderTop: `1px solid ${goldA(0.3)}`, borderLeft: `1px solid ${goldA(0.3)}` },
+                  { top: 14, right: 14, borderTop: `1px solid ${goldA(0.3)}`, borderRight: `1px solid ${goldA(0.3)}` },
+                  { bottom: 14, left: 14, borderBottom: `1px solid ${goldA(0.3)}`, borderLeft: `1px solid ${goldA(0.3)}` },
+                  { bottom: 14, right: 14, borderBottom: `1px solid ${goldA(0.3)}`, borderRight: `1px solid ${goldA(0.3)}` }
+                ].map((s, i) => (
+                  <div key={i} style={{ position: 'absolute', width: 30, height: 30, zIndex: 10, ...s }} />
+                ))}
+
+                <div className="pi" style={{ height: 320 }}>
+                  <img src={cur.image} alt={cur.title} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,5,3,0.95) 0%, rgba(7,5,3,0.35) 55%, transparent)' }} />
+                  <div style={{ position: 'absolute', top: 20, left: 20, display: 'flex', gap: 8 }}>
+                    <span className="stag" style={{ background: cur.color + '1a', color: cur.color, border: `1px solid ${cur.color}40` }}>{cur.type}</span>
+                    {cur.link === '#' && <span className="stag" style={{ background: 'rgba(251,191,36,0.1)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}>Dev Phase</span>}
+                  </div>
+                  <div style={{ position: 'absolute', bottom: 20, right: 20, fontFamily: display, fontSize: 80, lineHeight: 1, color: goldA(0.07), pointerEvents: 'none', userSelect: 'none' }}>
+                    {String(safeIdx + 1).padStart(2, '0')}
+                  </div>
+                </div>
+
+                <div style={{ padding: '36px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 16 }}>
+                    <div>
+                      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, color: goldA(0.45), textTransform: 'uppercase', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <MapPin size={9} />{cur.location} · {cur.year}
                       </div>
+                      <h3 style={{ fontFamily: serif, fontSize: 40, fontWeight: 500, color: fg, lineHeight: 1, margin: 0 }}>{cur.title}</h3>
+                    </div>
+                    {cur.link !== '#' && (
+                      <a href={cur.link} target="_blank" rel="noopener noreferrer" className="obtn" style={{ padding: '9px 18px', borderRadius: 2, textDecoration: 'none', flexShrink: 0 }}>
+                        Live <ExternalLink size={11} />
+                      </a>
                     )}
                   </div>
 
-                  <div className="p-6 sm:p-8">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <span className="text-sm text-slate-500 dark:text-slate-400">Project {activeProject + 1} of {filteredProjects.length}</span>
-                        <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
-                          {currentProject.title}
-                        </h3>
-                      </div>
-                      {currentProject.link !== '#' ? (
-                        <a
-                          href={currentProject.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          <span className="text-sm font-medium">Visit</span>
-                        </a>
-                      ) : (
-                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
-                          <span className="text-sm font-medium">In Development</span>
-                        </div>
-                      )}
-                    </div>
+                  <p style={{ color: fgA(0.42), lineHeight: 1.8, marginBottom: 28, fontWeight: 300, fontSize: 14, marginTop: 0 }}>{cur.description}</p>
 
-                    <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg leading-relaxed">
-                      {currentProject.description}
-                    </p>
-
-                    <div className="space-y-4">
-                      <div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-2">Key Features</div>
-                        <div className="flex flex-wrap gap-2">
-                          {currentProject.features.map((feature, idx) => (
-                            <span
-                              key={idx}
-                              className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 text-sm border border-slate-200 dark:border-slate-600"
-                            >
-                              {feature}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-2">Technologies Used</div>
-                        <div className="flex flex-wrap gap-2">
-                          {currentProject.tech.map((tech, idx) => (
-                            <span
-                              key={idx}
-                              className="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-medium"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, textTransform: 'uppercase', color: goldA(0.35), marginBottom: 10 }}>Tech Stack</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                      {cur.tech.map((t, i) => <span key={i} className="stag" style={{ background: cur.color + '12', color: cur.color, border: `1px solid ${cur.color}25` }}>{t}</span>)}
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={prevProject}
-                    disabled={isAnimating}
-                    className="flex items-center gap-2 px-5 py-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 disabled:opacity-50 transition-all"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                    <span className="font-medium">Previous</span>
-                  </button>
-                  
-                  <div className="flex items-center gap-2">
-                    {filteredProjects.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => scrollToProject(index)}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          index === activeProject
-                            ? 'w-8 bg-blue-500'
-                            : 'bg-slate-300 dark:bg-slate-600 hover:bg-slate-400'
-                        }`}
-                      />
-                    ))}
+                  <div>
+                    <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, textTransform: 'uppercase', color: goldA(0.35), marginBottom: 10 }}>Features</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                      {cur.features.map((f, i) => (
+                        <span key={i} style={{ padding: '4px 12px', border: `1px solid ${border}`, borderRadius: 2, fontSize: 11, fontFamily: mono, color: fgA(0.4), letterSpacing: 0.5 }}>{f}</span>
+                      ))}
+                    </div>
                   </div>
-                  
-                  <button
-                    onClick={nextProject}
-                    disabled={isAnimating}
-                    className="flex items-center gap-2 px-5 py-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 disabled:opacity-50 transition-all"
-                  >
-                    <span className="font-medium">Next</span>
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700">
-                  <h4 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Project Details</h4>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                        <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">Location</div>
-                        <div className="font-medium">{currentProject.location}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                        <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">Year</div>
-                        <div className="font-medium">{currentProject.year}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                        <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">Role</div>
-                        <div className="font-medium">{currentProject.role}</div>
-                      </div>
-                    </div>
-                  </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
+                <button onClick={prevProj} disabled={isAnimating} className="obtn" style={{ padding: '10px 22px', borderRadius: 2 }}>
+                  <ChevronLeft size={13} /> Prev
+                </button>
+                <div style={{ display: 'flex', gap: 5 }}>
+                  {filteredProjects.map((_, i) => (
+                    <button key={i}
+                      onClick={() => { if (!isAnimating) { setIsAnimating(true); setActiveProject(i); setTimeout(() => setIsAnimating(false), 500); } }}
+                      style={{ width: i === safeIdx ? 28 : 6, height: 2, background: i === safeIdx ? gold : goldA(0.2), border: 'none', cursor: 'pointer', borderRadius: 1, transition: 'all .3s', padding: 0 }} />
+                  ))}
                 </div>
-
-                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700">
-                  <h4 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Quick Project View</h4>
-                  <div className="space-y-3">
-                    {filteredProjects.map((project, index) => (
-                      <button
-                        key={index}
-                        onClick={() => scrollToProject(index)}
-                        className={`w-full p-4 rounded-xl text-left transition-all duration-300 flex items-center gap-4 ${
-                          index === activeProject
-                            ? 'bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800'
-                            : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 border border-transparent'
-                        }`}
-                      >
-                        <div className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border ${
-                          index === activeProject
-                            ? 'border-blue-300 dark:border-blue-700'
-                            : 'border-slate-200 dark:border-slate-700'
-                        }`}>
-                          <img
-                            src={project.image}
-                            alt={project.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-slate-900 dark:text-white truncate">
-                            {project.title}
-                          </div>
-                          <div className="text-sm text-slate-500 dark:text-slate-400 truncate">
-                            {project.type} • {project.year}
-                          </div>
-                        </div>
-                        <ChevronRight className={`w-5 h-5 flex-shrink-0 ${
-                          index === activeProject
-                            ? 'text-blue-600 dark:text-blue-400'
-                            : 'text-slate-400'
-                        }`} />
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <button onClick={nextProj} disabled={isAnimating} className="obtn" style={{ padding: '10px 22px', borderRadius: 2 }}>
+                  Next <ChevronRight size={13} />
+                </button>
               </div>
             </div>
 
-            <div className="mt-12 text-center">
-              <p className="text-slate-500 dark:text-slate-400 text-sm">
-                Scroll horizontally or use arrow keys to navigate between projects • Click on any project to view details
-              </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ padding: 22, border: `1px solid ${border}`, borderRadius: 2, background: panel }}>
+                <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, textTransform: 'uppercase', color: goldA(0.4), marginBottom: 18 }}>
+                  Project {safeIdx + 1} / {filteredProjects.length}
+                </div>
+                {[
+                  { icon: <MapPin size={13} />, l: 'Location', v: cur.location },
+                  { icon: <Calendar size={13} />, l: 'Year', v: cur.year },
+                  { icon: <Users size={13} />, l: 'Role', v: cur.role }
+                ].map((d, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0', borderBottom: i < 2 ? `1px solid ${border}` : 'none' }}>
+                    <div style={{ color: goldA(0.55), flexShrink: 0 }}>{d.icon}</div>
+                    <div>
+                      <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: fgA(0.22) }}>{d.l}</div>
+                      <div style={{ fontSize: 13, color: fgA(0.65), marginTop: 2 }}>{d.v}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ padding: '18px 16px', border: `1px solid ${border}`, borderRadius: 2, background: panel, flex: 1, overflow: 'hidden' }}>
+                <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, textTransform: 'uppercase', color: goldA(0.4), marginBottom: 14 }}>All Projects</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3, maxHeight: 480, overflowY: 'auto' }}>
+                  {filteredProjects.map((p, i) => (
+                    <button key={i}
+                      className={`proj-list-btn ${i === safeIdx ? 'active-proj' : ''}`}
+                      onClick={() => { if (!isAnimating) { setIsAnimating(true); setActiveProject(i); setTimeout(() => setIsAnimating(false), 500); } }}>
+                      <div style={{ width: 34, height: 34, borderRadius: 2, overflow: 'hidden', flexShrink: 0 }}>
+                        <img src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+                        <div style={{ fontSize: 12, color: i === safeIdx ? gold : fgA(0.55), fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.title}</div>
+                        <div style={{ fontFamily: mono, fontSize: 9, color: fgA(0.25), letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>{p.year}</div>
+                      </div>
+                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: p.color, flexShrink: 0 }} />
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="experience" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              Work Experience
+      <div style={{ overflow: 'hidden', borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}`, padding: '15px 0', position: 'relative', zIndex: 2 }}>
+        <div className="mq2" style={{ display: 'inline-flex', gap: 48, whiteSpace: 'nowrap', transform: 'translateX(-50%)' }}>
+          {Array(8).fill(['Payment Integration', '◆', 'Cloud Deployment', '◆', 'API Design', '◆', 'MERN Stack', '◆', 'Real-time Apps', '◆', 'Microservices', '◆']).flat().map((t, i) => (
+            <span key={i} style={{ fontFamily: display, fontSize: 13, letterSpacing: 3, color: t === '◆' ? gold : fgA(0.18), textTransform: 'uppercase' }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
+      <section id="about" style={{ padding: '120px 40px', position: 'relative', zIndex: 2 }}>
+        <div className="about-grid" style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+
+          <div className="abl">
+            <div className="lbl" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 5, textTransform: 'uppercase', color: gold, marginBottom: 20, display: 'inline-block' }}>About Me</div>
+            <h2 style={{ fontFamily: serif, fontSize: 'clamp(44px, 6vw, 80px)', fontWeight: 300, lineHeight: 0.92, color: fg, margin: '0 0 32px' }}>
+              Crafting<br /><em style={{ fontStyle: 'italic', color: gold }}>Digital</em><br />Experiences
             </h2>
-            <p className="text-xl text-slate-600 dark:text-slate-300">
-              Building impactful solutions that transform industries
+            <p style={{ color: fgA(0.45), lineHeight: 1.9, fontSize: 14, fontWeight: 300, marginBottom: 20, marginTop: 0 }}>
+              Self-taught Full-Stack Developer with a passion for building scalable, production-ready web applications. Delivered solutions for clients across UAE, India, Saudi Arabia, and Europe.
+            </p>
+            <p style={{ color: fgA(0.35), lineHeight: 1.9, fontSize: 14, fontWeight: 300, marginBottom: 36, marginTop: 0 }}>
+              From staycation booking platforms to hotel reservation systems and multi-vendor marketplaces — I bridge technical excellence with real business value.
+            </p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {['Dubai Based', 'Available Worldwide', 'MERN Expert', 'Cloud Native', 'API Specialist'].map((t, i) => (
+                <span key={i} style={{ padding: '7px 16px', border: `1px solid ${borderGold}`, color: goldA(0.55), fontFamily: mono, fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', borderRadius: 2 }}>{t}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="abr" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ position: 'relative', width: 340, height: 340 }}>
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1px solid ${goldA(0.12)}`, borderTop: `1px solid ${goldA(0.55)}` }} />
+              <div style={{ position: 'absolute', inset: 24, borderRadius: '50%', border: `1px solid ${goldA(0.08)}`, borderBottom: `1px solid ${goldA(0.4)}` }} />
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ padding: '36px 44px', border: `1px solid ${borderGold}`, background: goldA(0.04), borderRadius: 4, textAlign: 'center' }}>
+                  <div style={{ fontFamily: display, fontSize: 52, letterSpacing: 5, color: gold, lineHeight: 1 }}>NN</div>
+                  <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 5, textTransform: 'uppercase', color: goldA(0.4), marginTop: 10 }}>Full Stack Dev</div>
+                </div>
+              </div>
+              {[
+                { n: '14+', l: 'Projects', x: -48, y: -52, c: gold },
+                { n: '3+', l: 'Years', x: 290, y: -24, c: '#C470E8' },
+                { n: '5', l: 'Countries', x: 285, y: 275, c: gold }
+              ].map((d, i) => (
+                <div key={i} className="cc" style={{ position: 'absolute', left: d.x, top: d.y, padding: '12px 18px', background: 'rgba(7,5,3,0.85)', border: `1px solid ${d.c}30`, borderRadius: 2, textAlign: 'center' }}>
+                  <div style={{ fontFamily: display, fontSize: 26, color: d.c, lineHeight: 1 }}>{d.n}</div>
+                  <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: fgA(0.3), marginTop: 4 }}>{d.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" style={{ padding: '120px 40px', background: 'rgba(255,255,255,0.01)', borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}`, position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto' }}>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, flexWrap: 'wrap', gap: 24 }}>
+            <div>
+              <div className="lbl" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 5, textTransform: 'uppercase', color: gold, marginBottom: 20, display: 'inline-block' }}>Expertise</div>
+              <h2 className="clip-wipe" style={{ fontFamily: serif, fontSize: 'clamp(44px, 6vw, 80px)', fontWeight: 300, lineHeight: 0.92, color: fg, margin: 0 }}>
+                Technical <em style={{ fontStyle: 'italic', color: gold }}>Skills</em>
+              </h2>
+            </div>
+            <p style={{ color: fgA(0.32), fontSize: 14, maxWidth: 280, lineHeight: 1.8, fontWeight: 300, margin: 0 }}>
+              Proficient across the full web development stack with deep MERN specialization.
             </p>
           </div>
 
-          <div className="space-y-8">
-            {experiences.map((exp, index) => (
-              <div
-                key={index}
-                className="relative pl-8 pb-8 border-l-2 border-blue-500/30 last:pb-0"
-              >
-                <div className="absolute left-0 top-0 w-4 h-4 -ml-[9px] rounded-full bg-blue-500 ring-4 ring-blue-500/20" />
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400">
-                      {exp.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
-                        {exp.title}
-                      </h3>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium mb-2">
-                        {exp.company}
-                      </p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        {exp.period}
-                      </p>
-                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {exp.description}
-                      </p>
-                    </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 2 }}>
+            {skills.map((sk, i) => (
+              <div key={i} className="cc" style={{ padding: '18px 22px', border: `1px solid ${border}`, borderRadius: 2, background: 'transparent', transition: 'background .3s', cursor: 'default' }}
+                onMouseEnter={e => e.currentTarget.style.background = goldA(0.03)}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: 16 }}>{sk.icon}</span>
+                    <span style={{ fontSize: 14, color: fgA(0.75), fontWeight: 400 }}>{sk.name}</span>
                   </div>
+                  <span style={{ fontFamily: display, fontSize: 18, color: gold, letterSpacing: 1 }}>{sk.level}</span>
+                </div>
+                <div style={{ height: 1, background: border, borderRadius: 1 }}>
+                  <div className="sbar" data-w={sk.level} style={{ height: '100%', background: `linear-gradient(90deg, #b8902a, #e8c870)`, borderRadius: 1, width: '0%', boxShadow: `0 0 6px ${goldA(0.35)}` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 48, paddingTop: 48, borderTop: `1px solid ${border}`, textAlign: 'center' }}>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 4, textTransform: 'uppercase', color: goldA(0.3), marginBottom: 20 }}>Also Working With</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+              {['Stripe', 'Razorpay', 'AFS Payment', 'WebRTC', 'Firebase', 'Cloudinary', 'Kubernetes', 'Nginx', 'JWT', 'OAuth2', 'Vercel', 'GitHub Actions', 'Elasticsearch'].map((t, i) => (
+                <span key={i} className="cc" style={{ padding: '6px 16px', border: `1px solid ${border}`, borderRadius: 2, fontFamily: mono, fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: fgA(0.28), cursor: 'default', transition: 'all .3s', display: 'inline-block' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = borderGold; e.currentTarget.style.color = goldA(0.7); }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = border; e.currentTarget.style.color = fgA(0.28); }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" style={{ padding: '120px 40px', position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <div style={{ marginBottom: 72 }}>
+            <div className="lbl" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 5, textTransform: 'uppercase', color: gold, marginBottom: 20, display: 'inline-block' }}>Career</div>
+            <h2 className="clip-wipe" style={{ fontFamily: serif, fontSize: 'clamp(44px, 6vw, 80px)', fontWeight: 300, lineHeight: 0.92, color: fg, margin: 0 }}>
+              Work <em style={{ fontStyle: 'italic', color: gold }}>Experience</em>
+            </h2>
+          </div>
+
+          <div style={{ position: 'relative' }}>
+            <div className="tline" style={{ position: 'absolute', left: 19, top: 0, bottom: 0, width: 1, background: `linear-gradient(to bottom, ${goldA(0.5)}, ${goldA(0.1)})`, transformOrigin: 'top center' }} />
+            {experiences.map((ex, i) => (
+              <div key={i} style={{ paddingLeft: 60, paddingBottom: i < experiences.length - 1 ? 56 : 0, position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: 22, width: 15, height: 15, borderRadius: '50%', background: ex.color, boxShadow: `0 0 0 3px ${bg}, 0 0 0 5px ${ex.color}40, 0 0 18px ${ex.color}60` }} />
+                <div className="ecard cc" style={{ padding: '26px 28px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10, marginBottom: 8 }}>
+                    <h3 style={{ fontFamily: serif, fontSize: 26, fontWeight: 500, color: fg, margin: 0 }}>{ex.title}</h3>
+                    <span style={{ fontFamily: mono, fontSize: 9, letterSpacing: 2, color: goldA(0.5), textTransform: 'uppercase', padding: '5px 12px', border: `1px solid ${borderGold}`, borderRadius: 2, background: goldA(0.05), whiteSpace: 'nowrap' }}>{ex.period}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 10, marginBottom: 14, alignItems: 'center', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 13, color: ex.color, fontWeight: 500 }}>{ex.company}</span>
+                    <span style={{ color: fgA(0.18) }}>·</span>
+                    <span style={{ fontFamily: mono, fontSize: 10, color: fgA(0.35), letterSpacing: 1, textTransform: 'uppercase' }}>{ex.location}</span>
+                  </div>
+                  <p style={{ color: fgA(0.38), lineHeight: 1.8, fontSize: 14, fontWeight: 300, margin: 0 }}>{ex.description}</p>
                 </div>
               </div>
             ))}
@@ -775,90 +805,95 @@ const Portfolio = () => {
         </div>
       </section>
 
-      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
-        <div className="max-w-4xl mx-auto text-center">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              Let's Create Something Amazing Together
+      <section style={{ padding: '120px 40px', background: 'rgba(255,255,255,0.01)', borderTop: `1px solid ${border}`, position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 72 }}>
+            <div className="lbl" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 5, textTransform: 'uppercase', color: gold, marginBottom: 20, display: 'inline-block' }}>Services</div>
+            <h2 className="clip-wipe" style={{ fontFamily: serif, fontSize: 'clamp(44px, 6vw, 80px)', fontWeight: 300, lineHeight: 0.92, color: fg, margin: 0 }}>
+              What I <em style={{ fontStyle: 'italic', color: gold }}>Provide</em>
             </h2>
-            <p className="text-xl text-slate-600 dark:text-slate-300 mb-12">
-              Have a project in mind? Let's discuss how we can bring your ideas to life.
-            </p>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <a
-                href="mailto:nazeehnahaban09@gmail.com"
-                className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 group"
-              >
-                <Mail className="w-8 h-8 text-blue-600 mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                <h3 className="font-bold text-slate-900 dark:text-white mb-1">Email</h3>
-                <p className="text-slate-600 dark:text-slate-400">nazeehnahaban09@gmail.com</p>
-              </a>
-
-              <a
-                href="https://wa.me/919207904611"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 group"
-              >
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📱</div>
-                <h3 className="font-bold text-slate-900 dark:text-white mb-1">WhatsApp</h3>
-                <p className="text-slate-600 dark:text-slate-400">+91 9207904611</p>
-              </a>
-
-              <a
-                href="tel:+971507889313"
-                className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 group"
-              >
-                <Phone className="w-8 h-8 text-blue-600 mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                <h3 className="font-bold text-slate-900 dark:text-white mb-1">Phone</h3>
-                <p className="text-slate-600 dark:text-slate-400">+971 50 788 9313</p>
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/nazeeh-nahaban"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 group"
-              >
-                <Linkedin className="w-8 h-8 text-blue-600 mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                <h3 className="font-bold text-slate-900 dark:text-white mb-1">LinkedIn</h3>
-                <p className="text-slate-600 dark:text-slate-400">Connect with me</p>
-              </a>
-            </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 1, border: `1px solid ${border}` }}>
+            {[
+              { n: '01', t: 'Full-Stack Development', d: 'End-to-end web apps — from database architecture to responsive UI — built for scale and performance.' },
+              { n: '02', t: 'Secure API Design', d: 'RESTful and GraphQL APIs with JWT auth, rate limiting, and industry-best security practices.' },
+              { n: '03', t: 'Cloud Deployment', d: 'Docker containerization, AWS S3, Google Cloud Run with CI/CD pipelines and automated scaling.' },
+              { n: '04', t: 'Payment Integration', d: 'Stripe, Razorpay, and AFS payment gateways with secure, PCI-compliant transaction handling.' },
+              { n: '05', t: 'Mobile Development', d: 'React Native cross-platform apps for iOS and Android with native performance and UX.' },
+              { n: '06', t: 'Support & Maintenance', d: 'Ongoing technical support, security updates, performance optimization, and new features.' }
+            ].map((sv, i) => (
+              <div key={i} className="svc-card cc" style={{ padding: '32px 28px', borderRight: (i % 3 !== 2) ? `1px solid ${border}` : 'none', borderBottom: (i < 3) ? `1px solid ${border}` : 'none' }}>
+                <div style={{ fontFamily: display, fontSize: 52, color: goldA(0.06), position: 'absolute', top: 10, right: 16, lineHeight: 1, pointerEvents: 'none' }}>{sv.n}</div>
+                <h3 style={{ fontFamily: serif, fontSize: 22, fontWeight: 500, color: fg, marginBottom: 12, marginTop: 0 }}>{sv.t}</h3>
+                <p style={{ color: fgA(0.35), fontSize: 14, lineHeight: 1.8, fontWeight: 300, margin: 0 }}>{sv.d}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-4">
-            <p className="text-slate-600 dark:text-slate-400">
-              © {new Date().getFullYear()} Nazeeh Nahaban. All rights reserved.
-            </p>
-            <p className="text-sm text-slate-500 dark:text-slate-500">
-              Based in Dubai • Available Worldwide
-            </p>
-            <p className="text-sm text-slate-500 dark:text-slate-500">
-              UAE: +971 50 788 9313 • India: +91 92079 04611
-            </p>
-            <p className="text-xs text-slate-400 dark:text-slate-600">
-              Built with React and Tailwind CSS
-            </p>
+      <section id="contact" style={{ padding: '120px 40px 80px', position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
+          <div className="lbl" style={{ fontFamily: mono, fontSize: 10, letterSpacing: 5, textTransform: 'uppercase', color: gold, marginBottom: 20, display: 'inline-block' }}>Contact</div>
+          <h2 className="clip-wipe" style={{ fontFamily: serif, fontSize: 'clamp(52px, 9vw, 110px)', fontWeight: 300, lineHeight: 0.88, color: fg, margin: '0 0 20px' }}>
+            Let's Build<br /><em style={{ fontStyle: 'italic', color: gold }}>Together</em>
+          </h2>
+          <p style={{ color: fgA(0.35), fontSize: 15, maxWidth: 380, margin: '0 auto 56px', lineHeight: 1.8, fontWeight: 300 }}>
+            Have a project in mind? I'd love to discuss how we can bring your ideas to life.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 14, marginBottom: 40 }}>
+            {[
+              { icon: <Mail size={18} />, t: 'Email', v: 'nazeehnahaban09@gmail.com', href: 'mailto:nazeehnahaban09@gmail.com', c: '#E8C170' },
+              { icon: <span style={{ fontSize: 18 }}>💬</span>, t: 'WhatsApp', v: '+91 9207904611', href: 'https://wa.me/919207904611', c: '#70E8C1' },
+              { icon: <Phone size={18} />, t: 'Phone (UAE)', v: '+971 50 788 9313', href: 'tel:+971507889313', c: '#70B8E8' },
+              { icon: <Linkedin size={18} />, t: 'LinkedIn', v: 'nazeeh-nahaban', href: 'https://www.linkedin.com/in/nazeeh-nahaban', c: '#C470E8' }
+            ].map((ct, i) => (
+              <a key={i} href={ct.href} target="_blank" rel="noopener noreferrer" className="ccard"
+                style={{ display: 'block', padding: '26px 20px', border: `1px solid ${border}`, borderRadius: 2, textDecoration: 'none', background: panel, textAlign: 'left', transition: 'all .4s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = ct.c + '55'; e.currentTarget.style.background = ct.c + '08'; e.currentTarget.style.transform = 'translateY(-5px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = border; e.currentTarget.style.background = panel; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                <div style={{ color: ct.c, marginBottom: 14 }}>{ct.icon}</div>
+                <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, textTransform: 'uppercase', color: fgA(0.28), marginBottom: 6 }}>{ct.t}</div>
+                <div style={{ fontSize: 13, color: fgA(0.6), fontWeight: 400 }}>{ct.v}</div>
+              </a>
+            ))}
+          </div>
+
+          <div style={{ padding: '40px 48px', border: `1px solid ${borderGold}`, borderRadius: 2, background: goldA(0.04) }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', margin: '0 auto 16px', boxShadow: '0 0 10px #4ade80', animation: 'pulse-dot 2s ease infinite' }} />
+            <p style={{ fontFamily: mono, fontSize: 10, letterSpacing: 3, textTransform: 'uppercase', color: goldA(0.5), marginBottom: 28, marginTop: 0 }}>Available for Freelance & Full-time Opportunities</p>
+            <button className="gbtn" onClick={() => { window.location.href = 'mailto:nazeehnahaban09@gmail.com'; }} style={{ padding: '16px 44px', borderRadius: 2 }}>
+              Start a Conversation <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer style={{ padding: '36px 40px', borderTop: `1px solid ${border}`, position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <div style={{ fontFamily: display, fontSize: 22, letterSpacing: 4, color: gold }}>NAZEEH NAHABAN</div>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: 3, textTransform: 'uppercase', color: fgA(0.22), marginTop: 4 }}>Full-Stack Developer · Dubai, UAE</div>
+          </div>
+          <p style={{ fontFamily: mono, fontSize: 10, letterSpacing: 1.5, color: fgA(0.18), margin: 0 }}>© {new Date().getFullYear()} All rights reserved</p>
+          <div style={{ display: 'flex', gap: 10 }}>
+            {[
+              { icon: <Github size={14} />, href: 'https://github.com' },
+              { icon: <Linkedin size={14} />, href: 'https://www.linkedin.com/in/nazeeh-nahaban' },
+              { icon: <Mail size={14} />, href: 'mailto:nazeehnahaban09@gmail.com' }
+            ].map((l, i) => (
+              <a key={i} href={l.href} target="_blank" rel="noopener noreferrer"
+                style={{ width: 34, height: 34, border: `1px solid ${borderGold}`, borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', color: goldA(0.4), textDecoration: 'none', transition: 'all .3s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = gold; e.currentTarget.style.color = gold; e.currentTarget.style.background = goldA(0.07); }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = borderGold; e.currentTarget.style.color = goldA(0.4); e.currentTarget.style.background = 'transparent'; }}>
+                {l.icon}
+              </a>
+            ))}
           </div>
         </div>
       </footer>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-          }
-          50% {
-            transform: translateY(-20px) translateX(10px);
-          }
-        }
-      `}</style>
     </div>
   );
 };
