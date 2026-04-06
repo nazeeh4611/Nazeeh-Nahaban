@@ -1,4 +1,4 @@
-HEADimport React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Linkedin, Mail, Phone, ArrowRight, Download, Calendar, MapPin, Users, Code, Zap, ExternalLink, ChevronRight, ChevronLeft, Menu, X, Github } from 'lucide-react';
 
 const Portfolio = () => {
